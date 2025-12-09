@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reese's Factory Catch</title>
+    
+    <link rel="stylesheet" href="css/mystyles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #7c2d12, #991b1b, #78350f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            padding: 20px;
+            padding-top: 100px;
+        }
+        
+        .game-container {
+            background: #fffbeb;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            padding: 28px;
+            max-width: 580px;
+            width: 100%;
+            border: 4px solid #c2410c;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #9a3412;
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #ea580c;
+            font-size: 0.875rem;
+            margin-bottom: 20px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            gap: 8px;
+        }
+        
+        .stat-box {
+            padding: 12px 16px;
+            border-radius: 8px;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .stat-box.score { background: #fed7aa; }
+        .stat-box.lives { background: #fecaca; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .stat-box.combo { background: #fef08a; }
+        .stat-box.high { background: #fde68a; }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+        
+        .powerup-display {
+            text-align: center;
+            background: #dbeafe;
+            padding: 8px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #1e40af;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .canvas-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        
+        canvas {
+            border: 4px solid #9a3412;
+            border-radius: 8px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+            background: linear-gradient(to bottom, #1f2937, #111827);
+        }
+        
+        .button-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 16px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        
+        button:hover {
+            transform: scale(1.05);
+        }
+        
+        button:active {
+            transform: scale(0.95);
+        }
+        
+        .btn-start {
+            background: #ea580c;
+            color: white;
+        }
+        
+        .btn-start:hover {
+            background: #c2410c;
+        }
+        
+        .btn-instructions {
+            background: #2563eb;
+            color: white;
+        }
+        
+        .btn-instructions:hover {
+            background: #1d4ed8;
+        }
+        
+        .instructions {
+            background: #fffbeb;
+            border: 4px solid #ea580c;
+            border-radius: 12px;
+            padding: 24px;
+        }
+        
+        .instructions h2 {
+            color: #9a3412;
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .instruction-section {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .instruction-section h3 {
+            color: #c2410c;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+        
+        .instruction-section p, .instruction-section ul {
+            font-size: 0.875rem;
+            color: #374151;
+            line-height: 1.6;
+        }
+        
+        .instruction-section ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .instruction-section li {
+            margin-bottom: 4px;
+        }
+        
+        .game-over-text {
+            text-align: center;
+        }
+        
+        .game-over-text h2 {
+            color: #9a3412;
+            font-size: 1.75rem;
+            margin-bottom: 8px;
+        }
+        
+        .info-text {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #c2410c;
+            line-height: 1.6;
+        }
+        
+        .info-text p {
+            margin-bottom: 4px;
+        }
+        
+        .kbd {
+            background: #fed7aa;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav" role="navigation">
+        <div class="nav-inner">
+            <div class="brand">Reese's Catch</div>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="resume.html">Resume</a></li>
+                    <li><a href="reeses.html">Reese's Peanut Butter Cups</a></li>
+                    <li><a href="game.html" class="active">Game</a></li>
+                </ul>
+        </div>
+    </nav>
+    <div class="game-container">
+        <h1>Reese's Factory Catch! 🏭</h1>
+        <p class="subtitle">Catch the candy, avoid the bombs!</p>
+        
+        <div class="stats">
+            <div class="stat-box score">
+                <div class="stat-label" style="color: #9a3412;">Score</div>
+                <div class="stat-value" style="color: #78350f;" id="score">0</div>
+            </div>
+            <div class="stat-box lives">
+                <span style="color: #dc2626; font-size: 1.25rem;">❤️</span>
+                <div class="stat-value" style="color: #7f1d1d;" id="lives">3</div>
+            </div>
+            <div class="stat-box combo hidden" id="comboBox">
+                <div class="stat-label" style="color: #a16207;">⚡ Combo</div>
+                <div class="stat-value" style="color: #713f12;" id="combo">0</div>
+            </div>
+            <div class="stat-box high">
+                <div class="stat-label" style="color: #a16207;">🏆 Best</div>
+                <div class="stat-value" style="color: #713f12;" id="highScore">0</div>
+            </div>
+        </div>
+        
+        <div id="powerupDisplay" class="powerup-display hidden"></div>
+        
+        <div class="canvas-wrapper">
+            <canvas id="gameCanvas" width="520" height="420"></canvas>
+        </div>
+        
+        <div class="button-container" id="startScreen">
+            <button class="btn-start" onclick="startGame()">Start Catching! 🍫</button>
+            <button class="btn-instructions" onclick="showInstructions()">How to Play</button>
+        </div>
+        
+        <div class="instructions hidden" id="instructionsScreen">
+            <h2>How to Play 🎮</h2>
+            
+            <div class="instruction-section">
+                <h3>🎯 Objective</h3>
+                <p>Catch falling candy in your basket! Don't let candy hit the ground or you lose a life. You have 3 lives.</p>
+            </div>
+            
+            <div class="instruction-section">
+                <h3>🕹️ Controls</h3>
+                <p>Use <span class="kbd">← →</span> arrow keys or <span class="kbd">A D</span> to move your basket left and right.</p>
+            </div>
+            
+            <div class="instruction-section">
+                <h3>🍬 Items</h3>
+                <ul>
+                    <li>🍫 <strong>Reese's Cup</strong> = 10 points</li>
+                    <li>🥜 <strong>Peanut</strong> = 5 points</li>
+                    <li>⭐ <strong>Golden Star</strong> = 50 points</li>
+                    <li>💣 <strong>Bomb</strong> = Lose 1 life (avoid!)</li>
+                </ul>
+            </div>
+            
+            <div class="instruction-section">
+                <h3>⚡ Power-ups</h3>
+                <ul>
+                    <li>🐌 <strong>Slow Motion</strong> - Slows down falling items</li>
+                    <li>🧲 <strong>Magnet</strong> - Attracts nearby candy to you</li>
+                    <li>🛡️ <strong>Shield</strong> - Blocks the next bomb hit</li>
+                </ul>
+            </div>
+            
+            <div class="instruction-section">
+                <h3>🔥 Tips</h3>
+                <ul>
+                    <li>• Catch items in a row to build combos for bonus multipliers!</li>
+                    <li>• The game speeds up over time - stay focused!</li>
+                    <li>• Missing candy = lose a life, so catch everything!</li>
+                </ul>
+            </div>
+            
+            <button class="btn-start" style="width: 100%; margin-top: 12px;" onclick="hideInstructions()">Got It! Let's Play! 🚀</button>
+        </div>
+        
+        <div class="button-container hidden" id="gameOverScreen">
+            <div class="game-over-text" style="flex: 1;">
+                <h2>Game Over!</h2>
+                <p id="finalScoreText" style="color: #ea580c; font-size: 0.875rem;"></p>
+            </div>
+            <button class="btn-start" onclick="startGame()">🔄 Play Again</button>
+        </div>
+        
+        <div class="info-text" id="infoText">
+            <p>⌨️ Use <span class="kbd">← →</span> or <span class="kbd">A D</span> to move</p>
+            <p>🍫 Cups = 10pts | 🥜 Peanuts = 5pts | ⭐ Golden = 50pts | 💣 Bombs = -1 life</p>
+            <p>🎁 Power-ups: 🐌 Slow Time | 🧲 Attract Items | 🛡️ Block Bombs</p>
+        </div>
+    </div>
+    
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let gameState = 'start';
+        let score = 0;
+        let highScore = 0;
+        let lives = 3;
+        let playerX = 225;
+        let fallingItems = [];
+        let combo = 0;
+        let powerUp = null;
+        let powerUpTimer = 0;
+        let gameTime = 0;
+        let nextItemId = 0;
+        let musicStarted = false;
+        let synth = null;
+        let gameLoop = null;
+        let spawnLoop = null;
+        let gameTimeLoop = null;
+        let musicLoop = null;
+        let melodySynth = null;
+        
+        const CANVAS_WIDTH = 520;
+        const CANVAS_HEIGHT = 420;
+        const PLAYER_WIDTH = 70;
+        const PLAYER_HEIGHT = 50;
+        const ITEM_SIZE = 34;
+        const PLAYER_SPEED = 7;
+        
+        const keysPressed = {};
+        
+        const itemTypes = [
+            { type: 'cup', points: 10, color: '#d97d3a', emoji: '🍫' },
+            { type: 'peanut', points: 5, color: '#d4a574', emoji: '🥜' },
+            { type: 'golden', points: 50, color: '#FFD700', emoji: '⭐' },
+            { type: 'bomb', points: -20, color: '#8B0000', emoji: '💣' }
+        ];
+        
+        const powerUpTypes = [
+            { type: 'slow', duration: 5000, icon: '🐌', color: '#4169E1' },
+            { type: 'magnet', duration: 5000, icon: '🧲', color: '#DC143C' },
+            { type: 'shield', duration: 5000, icon: '🛡️', color: '#32CD32' }
+        ];
+        
+        window.addEventListener('keydown', (e) => {
+            keysPressed[e.key] = true;
+            if (e.key === ' ') e.preventDefault();
+        });
+        
+        window.addEventListener('keyup', (e) => {
+            keysPressed[e.key] = false;
+        });
+        
+        function initAudio() {
+            if (!synth) {
+                synth = new Tone.Synth({
+                    oscillator: { type: 'sine' },
+                    envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 0.5 }
+                }).toDestination();
+                
+                melodySynth = new Tone.PolySynth(Tone.Synth, {
+                    oscillator: { type: 'square' },
+                    envelope: { attack: 0.02, decay: 0.1, sustain: 0.4, release: 0.5 }
+                }).toDestination();
+                melodySynth.volume.value = -18;
+            }
+        }
+        
+        function startMusic() {
+            if (musicStarted) return;
+            
+            const melody = ['E4', 'G4', 'A4', 'G4', 'E4', 'D4', 'E4', 'G4'];
+            musicLoop = new Tone.Loop((time) => {
+                melody.forEach((note, i) => {
+                    melodySynth.triggerAttackRelease(note, '16n', time + i * 0.2);
+                });
+            }, '1.6n');
+            
+            musicLoop.start(0);
+            Tone.Transport.bpm.value = 140;
+            Tone.Transport.start();
+            musicStarted = true;
+        }
+        
+        function stopMusic() {
+            if (musicLoop) {
+                musicLoop.stop();
+                musicLoop.dispose();
+                musicLoop = null;
+            }
+            Tone.Transport.stop();
+            musicStarted = false;
+        }
+        
+        function updateUI() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('lives').textContent = lives;
+            document.getElementById('highScore').textContent = highScore;
+            document.getElementById('combo').textContent = combo + 'x';
+            
+            if (combo > 2) {
+                document.getElementById('comboBox').classList.remove('hidden');
+            } else {
+                document.getElementById('comboBox').classList.add('hidden');
+            }
+            
+            if (powerUp && powerUpTimer > 0) {
+                const powerupDisplay = document.getElementById('powerupDisplay');
+                powerupDisplay.classList.remove('hidden');
+                let text = '';
+                if (powerUp === 'slow') text = '🐌 SLOW MOTION';
+                if (powerUp === 'magnet') text = '🧲 MAGNET ACTIVE';
+                if (powerUp === 'shield') text = '🛡️ SHIELD ON';
+                powerupDisplay.textContent = `${text} (${(powerUpTimer / 1000).toFixed(1)}s)`;
+            } else {
+                document.getElementById('powerupDisplay').classList.add('hidden');
+            }
+        }
+        
+        function drawGame() {
+            const gradient = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
+            gradient.addColorStop(0, '#4a2c2a');
+            gradient.addColorStop(1, '#2d1810');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+            
+            ctx.strokeStyle = '#555';
+            ctx.lineWidth = 2;
+            for (let i = 0; i < 10; i++) {
+                ctx.beginPath();
+                ctx.moveTo(0, i * 60);
+                ctx.lineTo(CANVAS_WIDTH, i * 60);
+                ctx.stroke();
+            }
+            
+            fallingItems.forEach(item => {
+                if (item.isPowerUp) {
+                    ctx.fillStyle = item.color;
+                    ctx.beginPath();
+                    ctx.arc(item.x + ITEM_SIZE/2, item.y + ITEM_SIZE/2, ITEM_SIZE/2, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.font = '24px Arial';
+                    ctx.fillText(item.icon, item.x + 8, item.y + 28);
+                } else {
+                    ctx.fillStyle = item.color;
+                    ctx.beginPath();
+                    ctx.arc(item.x + ITEM_SIZE/2, item.y + ITEM_SIZE/2, ITEM_SIZE/2, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    if (item.type !== 'bomb') {
+                        ctx.strokeStyle = '#8B4513';
+                        ctx.lineWidth = 2;
+                        for (let i = 0; i < 8; i++) {
+                            const angle = (i / 8) * Math.PI * 2;
+                            ctx.beginPath();
+                            ctx.moveTo(item.x + ITEM_SIZE/2, item.y + ITEM_SIZE/2);
+                            ctx.lineTo(
+                                item.x + ITEM_SIZE/2 + Math.cos(angle) * 20,
+                                item.y + ITEM_SIZE/2 + Math.sin(angle) * 20
+                            );
+                            ctx.stroke();
+                        }
+                    }
+                    
+                    ctx.font = '28px Arial';
+                    ctx.fillText(item.emoji, item.x + 6, item.y + 30);
+                }
+            });
+            
+            const basketY = CANVAS_HEIGHT - PLAYER_HEIGHT - 10;
+            ctx.fillStyle = powerUp === 'shield' ? '#32CD32' : '#8B4513';
+            ctx.fillRect(playerX, basketY, PLAYER_WIDTH, PLAYER_HEIGHT);
+            
+            ctx.fillStyle = '#d4a574';
+            ctx.fillRect(playerX + 5, basketY + 5, PLAYER_WIDTH - 10, PLAYER_HEIGHT - 10);
+            
+            ctx.strokeStyle = '#654321';
+            ctx.lineWidth = 3;
+            for (let i = 0; i < 4; i++) {
+                ctx.beginPath();
+                ctx.moveTo(playerX + i * 20, basketY);
+                ctx.lineTo(playerX + i * 20, basketY + PLAYER_HEIGHT);
+                ctx.stroke();
+            }
+            
+            ctx.font = 'bold 32px Arial';
+            ctx.fillText('🧺', playerX + PLAYER_WIDTH/2 - 16, basketY + 40);
+            
+            if (powerUp) {
+                ctx.fillStyle = 'rgba(255,255,255,0.2)';
+                ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+            }
+        }
+        
+        function update() {
+            if (gameState !== 'playing') return;
+            
+            if (keysPressed['ArrowLeft'] || keysPressed['a']) {
+                playerX = Math.max(0, playerX - PLAYER_SPEED);
+            }
+            if (keysPressed['ArrowRight'] || keysPressed['d']) {
+                playerX = Math.min(CANVAS_WIDTH - PLAYER_WIDTH, playerX + PLAYER_SPEED);
+            }
+            
+            const baseSpeed = 3 + (gameTime / 10);
+            const speed = powerUp === 'slow' ? baseSpeed * 0.5 : baseSpeed;
+            
+            const remaining = [];
+            let scoreChange = 0;
+            let comboBreak = false;
+            let lostLife = false;
+            let missedCandy = false;
+            
+            fallingItems.forEach(item => {
+                item.y += speed;
+                
+                if (item.y >= CANVAS_HEIGHT) {
+                    if (item.type !== 'bomb' && !item.isPowerUp) {
+                        missedCandy = true;
+                        comboBreak = true;
+                    }
+                    return;
+                }
+                
+                const itemCenterX = item.x + ITEM_SIZE / 2;
+                const playerCenterX = playerX + PLAYER_WIDTH / 2;
+                const magnetRange = powerUp === 'magnet' ? 100 : 0;
+                const distance = Math.abs(itemCenterX - playerCenterX);
+                
+                if (powerUp === 'magnet' && distance < magnetRange && item.y > CANVAS_HEIGHT / 2 && 
+                    item.type !== 'bomb' && !item.isPowerUp) {
+                    item.x += (playerCenterX - itemCenterX) * 0.1;
+                }
+                
+                const collided = item.y + ITEM_SIZE > CANVAS_HEIGHT - PLAYER_HEIGHT - 10 &&
+                               item.y < CANVAS_HEIGHT - 10 &&
+                               item.x + ITEM_SIZE > playerX &&
+                               item.x < playerX + PLAYER_WIDTH;
+                
+                if (collided) {
+                    if (item.isPowerUp) {
+                        powerUp = item.type;
+                        powerUpTimer = item.duration;
+                        if (synth) synth.triggerAttackRelease('A5', '8n');
+                        return;
+                    } else if (item.type === 'bomb') {
+                        if (powerUp === 'shield') {
+                            powerUp = null;
+                            powerUpTimer = 0;
+                            if (synth) synth.triggerAttackRelease('F4', '8n');
+                        } else {
+                            lostLife = true;
+                            comboBreak = true;
+                            if (synth) synth.triggerAttackRelease('C3', '8n');
+                        }
+                        return;
+                    } else {
+                        scoreChange += item.points;
+                        if (item.type === 'golden') {
+                            if (synth) synth.triggerAttackRelease('C6', '16n');
+                        } else {
+                            if (synth) synth.triggerAttackRelease('G5', '16n');
+                        }
+                        return;
+                    }
+                }
+                
+                remaining.push(item);
+            });
+            
+            fallingItems = remaining;
+            
+            if (lostLife || missedCandy) {
+                lives = Math.max(0, lives - 1);
+                // Play lose life sound
+                if (synth) {
+                    synth.triggerAttackRelease('D3', '4n');
+                    setTimeout(() => {
+                        synth.triggerAttackRelease('C3', '4n');
+                    }, 100);
+                }
+            }
+            
+            if (scoreChange > 0) {
+                const comboMultiplier = Math.floor(combo / 3) + 1;
+                score = score + (scoreChange * comboMultiplier);
+            }
+            
+            if (comboBreak) {
+                combo = 0;
+            } else if (scoreChange > 0) {
+                combo = combo + 1;
+            }
+            
+            if (powerUpTimer > 0) {
+                powerUpTimer -= 16;
+                if (powerUpTimer <= 0) {
+                    powerUp = null;
+                    powerUpTimer = 0;
+                }
+            }
+            
+            if (lives <= 0) {
+                endGame();
+            }
+            
+            updateUI();
+            drawGame();
+        }
+        
+        function spawnItem() {
+            if (gameState !== 'playing') return;
+            
+            const rand = Math.random();
+            let item;
+            
+            if (rand < 0.05) {
+                item = itemTypes[2];
+            } else if (rand < 0.2) {
+                item = itemTypes[3];
+            } else if (rand < 0.5) {
+                item = itemTypes[1];
+            } else {
+                item = itemTypes[0];
+            }
+            
+            fallingItems.push({
+                id: nextItemId++,
+                ...item,
+                x: Math.random() * (CANVAS_WIDTH - ITEM_SIZE),
+                y: -ITEM_SIZE
+            });
+            
+            if (Math.random() < 0.08) {
+                const pwrUp = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
+                fallingItems.push({
+                    id: nextItemId++,
+                    isPowerUp: true,
+                    ...pwrUp,
+                    x: Math.random() * (CANVAS_WIDTH - ITEM_SIZE),
+                    y: -ITEM_SIZE
+                });
+            }
+        }
+        
+        async function startGame() {
+            await Tone.start();
+            initAudio();
+            startMusic();
+            
+            score = 0;
+            lives = 3;
+            combo = 0;
+            gameTime = 0;
+            playerX = CANVAS_WIDTH / 2 - PLAYER_WIDTH / 2;
+            fallingItems = [];
+            powerUp = null;
+            powerUpTimer = 0;
+            nextItemId = 0;
+            gameState = 'playing';
+            
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('gameOverScreen').classList.add('hidden');
+            document.getElementById('infoText').classList.remove('hidden');
+            
+            updateUI();
+            
+            if (gameLoop) clearInterval(gameLoop);
+            if (spawnLoop) clearInterval(spawnLoop);
+            if (gameTimeLoop) clearInterval(gameTimeLoop);
+            
+            gameLoop = setInterval(update, 1000 / 60);
+            spawnLoop = setInterval(spawnItem, 1200);
+            gameTimeLoop = setInterval(() => {
+                if (gameState === 'playing') gameTime++;
+            }, 1000);
+        }
+        
+        function endGame() {
+            gameState = 'gameOver';
+            if (score > highScore) highScore = score;
+            
+            stopMusic();
+            
+            clearInterval(gameLoop);
+            clearInterval(spawnLoop);
+            clearInterval(gameTimeLoop);
+            
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('gameOverScreen').classList.remove('hidden');
+            document.getElementById('infoText').classList.add('hidden');
+            
+            const finalText = score === highScore && score > 0 ? 
+                '🎉 New High Score!' : `Final Score: ${score}`;
+            document.getElementById('finalScoreText').textContent = finalText;
+            
+            updateUI();
+        }
+        
+        function showInstructions() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('instructionsScreen').classList.remove('hidden');
+            document.getElementById('infoText').classList.add('hidden');
+        }
+        
+        function hideInstructions() {
+            document.getElementById('startScreen').classList.remove('hidden');
+            document.getElementById('instructionsScreen').classList.add('hidden');
+            document.getElementById('infoText').classList.remove('hidden');
+        }
+        
+        drawGame();
+    </script>
+</body>
+</html>
+</body>
+</html>

@@ -1,0 +1,18 @@
+body {
+  background-color: #4b2e05;
+  color: #ff8c00;
+  font-family: 'Comic Sans MS', cursive;
+  text-align: center;
+}
+
+canvas {
+  border: 3px solid #ff8c00;
+  background-color: #1a0f00;
+  display: block;
+  margin: 0 auto;
+}
+
+#score {
+  font-size: 1.5em;
+  margin-top: 10px;
+}

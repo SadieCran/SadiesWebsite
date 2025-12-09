@@ -1,0 +1,78 @@
+/* Site-wide small navigation and layout helpers */
+body {
+	padding-top: 80px;
+	font-family: 'Comic Sans MS', cursive, sans-serif;
+}
+
+.top-nav {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 60px;
+	background: rgba(255,255,255,0.97);
+	display: flex;
+	align-items: center;
+	z-index: 1000;
+	border-bottom: 4px solid #c2410c;
+	box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+}
+
+.top-nav .nav-inner {
+	width: 100%;
+	max-width: 1000px;
+	margin: 0 auto;
+	display: flex;
+	align-items: center;
+	padding: 0 20px;
+}
+
+.top-nav .brand {
+	font-weight: 800;
+	color: #9a3412;
+	font-size: 1.05rem;
+}
+
+.top-nav ul {
+	list-style: none;
+	display: flex;
+	gap: 12px;
+	margin: 0;
+	padding: 0;
+	margin-left: auto;
+	align-items: center;
+}
+
+.top-nav a {
+	color: #000;
+	padding: 8px 12px;
+	border-radius: 8px;
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.top-nav a:hover { background: rgba(0,0,0,0.06); }
+.top-nav a.active { text-decoration: underline; }
+
+/* Responsive YouTube/video embed wrapper */
+.video-wrapper {
+	max-width: 920px;
+	margin: 18px auto;
+}
+
+.video-wrapper iframe {
+	width: 100%;
+	aspect-ratio: 16/9;
+	height: auto;
+	border: 0;
+	border-radius: 8px;
+}
+.reesesimg
+{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+
+}
+

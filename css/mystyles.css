@@ -1,4 +1,4 @@
-/* Site-wide small navigation and layout helpers */
+
 body {
 	padding-top: 80px;
 	font-family: 'Comic Sans MS', cursive, sans-serif;
@@ -55,7 +55,7 @@ body {
 .top-nav a:hover { background: rgba(0,0,0,0.06); }
 .top-nav a.active { text-decoration: underline; }
 
-/* Responsive YouTube/video embed wrapper */
+
 .video-wrapper {
 	max-width: 920px;
 	margin: 18px auto;
@@ -91,14 +91,54 @@ html {
 	background: #9a3412;
 }
 
-/* Center Tableau embed */
-.tableau-container {
-	display: flex;
-	justify-content: center;
-	margin: 24px auto;
+/* Page content sections */
+main {
+	max-width: 900px;
+	margin: 0 auto;
+	padding: 20px;
+}
+
+h1 {
+	color: #9a3412;
+	font-size: 2rem;
+	margin-top: 32px;
+	margin-bottom: 16px;
+	text-align: center;
+	font-weight: 800;
+}
+
+h2 {
+	color: #c2410c;
+	font-size: 1.5rem;
+	margin-top: 24px;
+	margin-bottom: 12px;
+	text-align: center;
 }
 
 /* Centered list container with semi-transparent orange background */
+.list-container {
+	max-width: 700px;
+	margin: 24px auto;
+	padding: 20px;
+	background-color: rgba(255, 165, 0, 0.25);
+	border-radius: 8px;
+}
+
+.list-container ol {
+	margin-left: 20px;
+	line-height: 1.8;
+}
+
+.list-container li {
+	margin-bottom: 12px;
+	color: #333;
+}
+
+
+
+
+
+
 .list-container {
 	max-width: 700px;
 	margin: 24px auto;
@@ -113,6 +153,10 @@ html {
     margin-left: auto;
     margin-right: auto;
     width: 50%;
-
+    margin-top: 24px;
+    margin-bottom: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 3px solid #c2410c;
 }
 

@@ -178,3 +178,17 @@ h2 {
     border: 3px solid #c2410c;
 }
 
+/* Resume page styling */
+.resume-section-title {
+	color: #c2410c;
+	font-size: 1.1rem;
+	margin: 12px 0 6px 0;
+}
+
+.resume-education-list {
+	margin-bottom: 24px;
+}
+
+.resume-job-list {
+	margin-bottom: 12px;
+}
